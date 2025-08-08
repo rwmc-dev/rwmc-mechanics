@@ -1,0 +1,8 @@
+name: RWMCMechanics
+version: '${version}'
+main: dev.rwmc.mechanicsplugin.RWMCMechanics
+api-version: '1.21'
+prefix: RWMCMechanics
+author: RWMC Development Team
+description: Plugin for RWMC managing game mechanics
+website: https://github.com/rwmc-dev/rwmc-mechanics
