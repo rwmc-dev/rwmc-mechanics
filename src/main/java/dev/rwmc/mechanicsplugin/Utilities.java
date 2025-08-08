@@ -15,8 +15,8 @@ public class Utilities {
         Integer value = player.getPersistentDataContainer().get(Objects.requireNonNull(NamespacedKey.fromString("rwmc:req_food")), PersistentDataType.INTEGER);
         if (value != null) { return value; } else { return 0; }
     }
-    public static int getPlayerFood(Player player) {
-        Integer value = player.getPersistentDataContainer().get(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.INTEGER);
+    public static double getPlayerFood(Player player) {
+        Double value = player.getPersistentDataContainer().get(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.DOUBLE);
         if (value != null) { return value; } else { return 0; }
     }
     public static boolean getPlayerStarving(Player player) {
@@ -38,8 +38,8 @@ public class Utilities {
     public static void setPlayerReqFood(Player player, int reqFood) {
         player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:req_food")), PersistentDataType.INTEGER, reqFood);
     }
-    public static void setPlayerFood(Player player, int food) {
-        player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.INTEGER, food);
+    public static void setPlayerFood(Player player, double food) {
+        player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.DOUBLE, food);
     }
     public static void setPlayerStarving(Player player, boolean isStarving) {
         player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:is_starving")), PersistentDataType.BOOLEAN, isStarving);
