@@ -19,7 +19,7 @@ public class HungerLockTask implements Runnable {
         Collection<? extends Player> players = this.plugin.getServer().getOnlinePlayers();
         players.forEach(player -> {
             int food;
-            if ((int)Utilities.getPlayerFood(player) <= Utilities.getPlayerMaxFood(player))
+            if ((int)Utilities.getPlayerFood(player) == Utilities.getPlayerMaxFood(player))
                 food = 20;
                 else food = 19;
             player.setFoodLevel(food);
