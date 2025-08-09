@@ -7,6 +7,10 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Objects;
 
 public class Utilities {
+    public static String getPlayerSlugcat(Player player) {
+        String playerSlugcat = player.getPersistentDataContainer().get(Objects.requireNonNull(NamespacedKey.fromString("rwmc:slugcat")), PersistentDataType.STRING);
+        if (playerSlugcat != null) { return playerSlugcat; } else { return "survivor"; }
+    }
     public static int getPlayerMaxFood(Player player) {
         Integer value = player.getPersistentDataContainer().get(Objects.requireNonNull(NamespacedKey.fromString("rwmc:max_food")), PersistentDataType.INTEGER);
         if (value != null) { return value; } else { return 0; }
