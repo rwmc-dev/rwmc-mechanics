@@ -41,7 +41,7 @@ public class ActionBarTask implements Runnable {
                 int offset = (int) (food%1 * 3);
                 extra = Character.toString((char)0xE015-offset);
             }
-            String foodBar = "\uE010".repeat((int) Math.floor(food))+extra+"\uE012".repeat(Math.max(0, maxFood-(int)food));
+            String foodBar = "\uE010".repeat((int) Math.floor(food))+extra+"\uE012".repeat(Math.max(0, maxFood-(int) Math.ceil(food)));
             foodBar = foodBar.substring(0,reqFood)+"\uE011"+foodBar.substring(reqFood);
             int spacesBetween = 0;
             spacesBetween = switch (Utilities.getPlayerSlugcat(player)) {
