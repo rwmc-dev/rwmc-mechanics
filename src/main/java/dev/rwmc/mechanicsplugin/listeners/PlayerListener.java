@@ -1,6 +1,10 @@
 package dev.rwmc.mechanicsplugin.listeners;
 
 import dev.rwmc.mechanicsplugin.Utilities;
+import jdk.jshell.execution.Util;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -39,14 +43,22 @@ public class PlayerListener implements Listener {
         );
 
         String playerDiet = slugcatDiets.get(playerSlugcat);
+        Player player = event.getPlayer();
         ItemType consumedItem = Objects.requireNonNull(event.getItem()).getType().asItemType();
+        boolean fail = false;
         if (!Objects.equals(playerDiet, "all")) {
             if (Objects.equals(playerDiet, "meat") && Arrays.stream(dietTypes.get("plant")).toList().contains(consumedItem)) {
+                fail = true;
                 event.setCancelled(true);
             }
             if (Objects.equals(playerDiet, "plant") && Arrays.stream(dietTypes.get("meat")).toList().contains(consumedItem)) {
+                fail = true;
                 event.setCancelled(true);
             }
         }
+        if (fail) {
+            player.playSound(player, Sound.ITEM_SHIELD_BREAK, 1f, 1f);
+        }
     }
+
 }
