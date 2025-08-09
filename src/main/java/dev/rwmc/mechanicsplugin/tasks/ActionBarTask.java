@@ -6,8 +6,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.ARGBLike;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -27,7 +25,6 @@ public class ActionBarTask implements Runnable {
             int karma = Utilities.getPlayerKarma(player);
             int maxKarma = Utilities.getPlayerMaxKarma(player);
             String karmaReference = "";
-            int karmaSpacer = 56;
             if (maxKarma <= 4) {
                 karmaReference = Character.toString((char)0xE016+karma);
             }
