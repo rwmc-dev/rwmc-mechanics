@@ -1,13 +1,12 @@
 package dev.rwmc.mechanicsplugin.listeners;
 
 import dev.rwmc.mechanicsplugin.Utilities;
-import jdk.jshell.execution.Util;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemType;
 
 import java.util.Arrays;
@@ -15,32 +14,34 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PlayerListener implements Listener {
+    private final Map<String, String> slugcatDiets = Map.of(
+            "survivor", "all",
+            "monk", "all",
+            "hunter", "meat"
+    );
+
+    @SuppressWarnings("UnstableApiUsage")
+    private final Map<String, ItemType[]> dietTypes = Map.of(
+            "meat", new ItemType[]{
+                    ItemType.BEEF, ItemType.PORKCHOP, ItemType.MUTTON, ItemType.CHICKEN, ItemType.RABBIT,
+                    ItemType.COD, ItemType.SALMON, ItemType.TROPICAL_FISH, ItemType.PUFFERFISH, ItemType.ROTTEN_FLESH,
+                    ItemType.SPIDER_EYE, ItemType.RABBIT_STEW, ItemType.COOKED_BEEF, ItemType.COOKED_PORKCHOP, ItemType.COOKED_MUTTON,
+                    ItemType.COOKED_CHICKEN, ItemType.COOKED_RABBIT, ItemType.COOKED_COD, ItemType.COOKED_SALMON
+            },
+            "plant", new ItemType[]{
+                    ItemType.APPLE, ItemType.GOLDEN_APPLE, ItemType.ENCHANTED_GOLDEN_APPLE, ItemType.MELON_SLICE, ItemType.SWEET_BERRIES,
+                    ItemType.GLOW_BERRIES, ItemType.CHORUS_FRUIT, ItemType.CARROT, ItemType.GOLDEN_CARROT, ItemType.POTATO,
+                    ItemType.BAKED_POTATO, ItemType.POISONOUS_POTATO, ItemType.BEETROOT, ItemType.DRIED_KELP, ItemType.BREAD,
+                    ItemType.COOKIE, ItemType.CAKE, ItemType.PUMPKIN_PIE, ItemType.MUSHROOM_STEW, ItemType.BEETROOT_SOUP,
+                    ItemType.SUSPICIOUS_STEW
+            }
+    );
+
     @EventHandler
     @SuppressWarnings("UnstableApiUsage")
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getItem() == null) { return; }
         String playerSlugcat = Utilities.getPlayerSlugcat(event.getPlayer());
-
-        Map<String, String> slugcatDiets = Map.of(
-          "survivor", "all",
-          "monk", "all",
-          "hunter", "meat"
-        );
-        Map<String, ItemType[]> dietTypes = Map.of(
-                "meat", new ItemType[]{
-                        ItemType.BEEF, ItemType.PORKCHOP, ItemType.MUTTON, ItemType.CHICKEN, ItemType.RABBIT,
-                        ItemType.COD, ItemType.SALMON, ItemType.TROPICAL_FISH, ItemType.PUFFERFISH, ItemType.ROTTEN_FLESH,
-                        ItemType.SPIDER_EYE, ItemType.RABBIT_STEW, ItemType.COOKED_BEEF, ItemType.COOKED_PORKCHOP, ItemType.COOKED_MUTTON,
-                        ItemType.COOKED_CHICKEN, ItemType.COOKED_RABBIT, ItemType.COOKED_COD, ItemType.COOKED_SALMON
-                },
-                "plant", new ItemType[]{
-                        ItemType.APPLE, ItemType.GOLDEN_APPLE, ItemType.ENCHANTED_GOLDEN_APPLE, ItemType.MELON_SLICE, ItemType.SWEET_BERRIES,
-                        ItemType.GLOW_BERRIES, ItemType.CHORUS_FRUIT, ItemType.CARROT, ItemType.GOLDEN_CARROT, ItemType.POTATO,
-                        ItemType.BAKED_POTATO, ItemType.POISONOUS_POTATO, ItemType.BEETROOT, ItemType.DRIED_KELP, ItemType.BREAD,
-                        ItemType.COOKIE, ItemType.CAKE, ItemType.PUMPKIN_PIE, ItemType.MUSHROOM_STEW, ItemType.BEETROOT_SOUP,
-                        ItemType.SUSPICIOUS_STEW
-                }
-        );
 
         String playerDiet = slugcatDiets.get(playerSlugcat);
         Player player = event.getPlayer();
@@ -59,6 +60,34 @@ public class PlayerListener implements Listener {
         if (fail) {
             player.playSound(player, Sound.ITEM_SHIELD_BREAK, 1f, 1f);
         }
+    }
+
+    @EventHandler
+    @SuppressWarnings("UnstableApiUsage")
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+        String playerSlugcat = Utilities.getPlayerSlugcat(player);
+        String playerDiet = slugcatDiets.get(playerSlugcat);
+
+        ItemType consumedItem = event.getItem().getType().asItemType();
+
+        Map<ItemType, Double> allDietFoodEffectiveness = Map.of(
+                ItemType.COOKED_BEEF, 1d,     ItemType.COOKED_PORKCHOP, 1d,
+                ItemType.COOKED_MUTTON, 1d,   ItemType.COOKED_CHICKEN, 1d,
+                ItemType.COOKED_RABBIT, 1d,   ItemType.COOKED_COD, 1d,
+                ItemType.COOKED_SALMON, 1d,   ItemType.RABBIT_STEW, 1d
+        );
+
+        double foodGain = 1;
+        double curFood = Utilities.getPlayerFood(player);
+        int maxFood = Utilities.getPlayerMaxFood(player);
+
+        if (Objects.equals(playerDiet, "all") && Arrays.stream(dietTypes.get("meat")).toList().contains(consumedItem)) {
+            foodGain = allDietFoodEffectiveness.getOrDefault(consumedItem, 0.5);
+        }
+
+        foodGain = Math.min(foodGain, maxFood-curFood);
+        Utilities.setPlayerFood(player, curFood+foodGain);
     }
 
 }
