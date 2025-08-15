@@ -6,7 +6,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.rwmc.mechanicsplugin.listeners.EntityRegainHealthListener;
 import dev.rwmc.mechanicsplugin.listeners.PlayerListener;
 import dev.rwmc.mechanicsplugin.tasks.ActionBarTask;
-import dev.rwmc.mechanicsplugin.tasks.HungerLockTask;
+import dev.rwmc.mechanicsplugin.tasks.HungerManageTask;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
@@ -33,7 +33,7 @@ public final class RWMCMechanics extends JavaPlugin {
 
         BukkitScheduler scheduler = this.getServer().getScheduler();
         scheduler.runTaskTimer(this, new ActionBarTask(this), 0, 20);
-        scheduler.runTaskTimer(this, new HungerLockTask(this), 0, 20);
+        scheduler.runTaskTimer(this, new HungerManageTask(this), 0, 20);
         getServer().getPluginManager().registerEvents(new EntityRegainHealthListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
