@@ -1,10 +1,13 @@
 package dev.rwmc.mechanicsplugin.listeners;
 
 import dev.rwmc.mechanicsplugin.Utilities;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemType;
@@ -90,4 +93,15 @@ public class PlayerListener implements Listener {
         Utilities.setPlayerFood(player, curFood+foodGain);
     }
 
+    @EventHandler
+    public void onPlayerEnterBed(PlayerBedEnterEvent event) {
+        Player player = event.getPlayer();
+
+        double food = Utilities.getPlayerFood(player);
+        double reqFood = Utilities.getPlayerReqFood(player);
+        if (!(food >= reqFood)) {
+            event.setCancelled(true);
+            player.sendMessage(Component.text("You do not have enough food to sleep.", NamedTextColor.RED));
+        }
+    }
 }
