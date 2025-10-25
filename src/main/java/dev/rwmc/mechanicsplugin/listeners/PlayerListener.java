@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -119,6 +120,17 @@ public class PlayerListener implements Listener {
         Utilities.setPlayerFood(player, food - reqFood);
         if (karma < maxKarma) {
             Utilities.setPlayerKarma(player, karma + 1);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getPlayer();
+
+        int karma = Utilities.getPlayerKarma(player);
+
+        if (karma > 0) {
+            Utilities.setPlayerKarma(player, karma - 1);
         }
     }
 }

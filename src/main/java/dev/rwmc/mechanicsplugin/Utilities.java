@@ -43,7 +43,8 @@ public class Utilities {
         player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:req_food")), PersistentDataType.INTEGER, reqFood);
     }
     public static void setPlayerFood(Player player, double food) {
-        player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.DOUBLE, food);
+        double adjFood = Math.min(getPlayerMaxFood(player), Math.max(0, food));
+        player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:food")), PersistentDataType.DOUBLE, adjFood);
     }
     public static void setPlayerStarving(Player player, boolean isStarving) {
         player.getPersistentDataContainer().set(Objects.requireNonNull(NamespacedKey.fromString("rwmc:is_starving")), PersistentDataType.BOOLEAN, isStarving);
