@@ -1,6 +1,8 @@
 package dev.rwmc.mechanicsplugin.listeners;
 
 import dev.rwmc.mechanicsplugin.Utilities;
+import io.papermc.paper.event.player.PlayerDeepSleepEvent;
+import jdk.jshell.execution.Util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
@@ -102,6 +104,21 @@ public class PlayerListener implements Listener {
         if (!(food >= reqFood)) {
             event.setCancelled(true);
             player.sendMessage(Component.text("You do not have enough food to sleep.", NamedTextColor.RED));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeepSleep(PlayerDeepSleepEvent event) {
+        Player player = event.getPlayer();
+
+        int karma = Utilities.getPlayerKarma(player);
+        int maxKarma = Utilities.getPlayerMaxKarma(player);
+        double food = Utilities.getPlayerFood(player);
+        double reqFood = Utilities.getPlayerReqFood(player);
+
+        Utilities.setPlayerFood(player, food - reqFood);
+        if (karma < maxKarma) {
+            Utilities.setPlayerKarma(player, karma + 1);
         }
     }
 }
